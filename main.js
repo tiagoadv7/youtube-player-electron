@@ -46,6 +46,7 @@ function createWindow() {
           nodeIntegration: true,
         },
         autoHideMenuBar: true,
+        icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizad
       });
     }
 
