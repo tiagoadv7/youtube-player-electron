@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,7 +28,7 @@
       border-radius: 50%;
       width: 80px;
       height: 80px;
-      animation: spin 1s linear infinite;
+      animation: spin 3s linear infinite;
     }
 
     @keyframes spin {
@@ -59,8 +59,14 @@
 
     <!-- Input e botão -->
     <div class="flex justify-center items-center">
-      <input id="urlInput" type="text" class="border border-gray-300 p-2 rounded-l-md w-96" placeholder="Cole a URL do YouTube" />
-      <button id="playBtn" class="bg-blue-500 text-white p-2  rounded-r-md">
+      <label class="relative block text-slate-500">
+        <span class="sr-only "></span>
+        <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+            <i class="fas fa-paste"></i>
+        </span>
+        <input id="urlInput" type="text" class="placeholder:italic placeholder:text-slate-500 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm w-96" placeholder="Cole uma URL do YouTube" />
+      </label>
+      <button id="playBtn" class="bg-sky-500 hover:bg-sky-700 rounded-full mt-1 ml-2 px-3 py-2 text-white items-center justify-center">
         <i class="fas fa-play"></i>
       </button>
     </div>
