@@ -15,6 +15,7 @@ function createWindow() {
       contextIsolation: false,
     },
     autoHideMenuBar: true,
+    icon: path.join(__dirname, 'assets/icons/app-icon.png'),  // Ícone personalizado
   });
 
   mainWindow.loadFile('index.html');
