@@ -10,19 +10,19 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'renderer.js'), // Carrega o script renderer
+      preload: path.join(__dirname, 'renderer.js'),
       nodeIntegration: true,
-      contextIsolation: false, // Permite comunicação entre processos
+      contextIsolation: false,
     },
-    autoHideMenuBar: true, // Esconde a barra de menu
+    autoHideMenuBar: true,
   });
 
-  mainWindow.loadFile('index.html'); // Carrega a interface principal (index.html)
+  mainWindow.loadFile('index.html');
 
   // Evento para abrir o vídeo em tela cheia
   ipcMain.on('play-video', (event, url) => {
-    const displays = screen.getAllDisplays(); // Pega todas as telas disponíveis
-    const externalDisplay = displays.find(display => display.bounds.x !== 0 || display.bounds.y !== 0); // Verifica se há tela externa
+    const displays = screen.getAllDisplays();
+    const externalDisplay = displays.find(display => display.bounds.x !== 0 || display.bounds.y !== 0);
 
     let videoWindow;
 
@@ -31,11 +31,11 @@ function createWindow() {
       videoWindow = new BrowserWindow({
         x: externalDisplay.bounds.x,
         y: externalDisplay.bounds.y,
-        fullscreen: true, // Garante tela cheia
+        fullscreen: true,
         webPreferences: {
           nodeIntegration: true,
         },
-        autoHideMenuBar: true, // Esconde a barra de menu
+        autoHideMenuBar: true,
       });
     } else {
       // Caso contrário, exibe na tela primária em tela cheia
@@ -44,22 +44,35 @@ function createWindow() {
         webPreferences: {
           nodeIntegration: true,
         },
-        autoHideMenuBar: true, // Esconde a barra de menu
+        autoHideMenuBar: true,
       });
     }
 
-    videoWindow.loadURL(url); // Carrega o vídeo do YouTube
+    // Carrega o HTML local e passa o ID do vídeo como parâmetro
+    const videoId = extractVideoId(url);  // Extrai o ID do vídeo
+    if (videoId) {
+      videoWindow.loadURL(`file://${__dirname}/video.html?video=${videoId}`);
+    } else {
+      console.log("URL inválida");
+    }
   });
+}
+
+// Função para extrair o ID do vídeo da URL
+function extractVideoId(url) {
+  const videoIdRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+  const match = url.match(videoIdRegex);
+  return match ? match[1] : null;
 }
 
 app.whenReady().then(() => {
   createWindow();
 
   app.on('activate', function () {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow(); // Garante que a janela é criada se o app estiver ativo
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit(); // Fecha o app quando todas as janelas forem fechadas, exceto no Mac
+  if (process.platform !== 'darwin') app.quit();
 });
