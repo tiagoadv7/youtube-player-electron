@@ -20,14 +20,19 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
-  // Evento para abrir o vídeo em tela cheia
   ipcMain.on('play-video', (event, url) => {
+    const videoId = extractVideoId(url);  // Extrai o ID do vídeo do YouTube
+
+    if (!videoId) {
+      event.sender.send('video-error', 'Por favor, insira uma URL válida do YouTube.');
+      return;
+    }
+
     const displays = screen.getAllDisplays();
     const externalDisplay = displays.find(display => display.bounds.x !== 0 || display.bounds.y !== 0);
 
     let videoWindow;
 
-    // Se houver tela externa, exibe o vídeo nela em tela cheia
     if (externalDisplay) {
       videoWindow = new BrowserWindow({
         x: externalDisplay.bounds.x,
@@ -37,26 +42,27 @@ function createWindow() {
           nodeIntegration: true,
         },
         autoHideMenuBar: true,
+        icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
       });
     } else {
-      // Caso contrário, exibe na tela primária em tela cheia
       videoWindow = new BrowserWindow({
-        icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
         fullscreen: true,
         webPreferences: {
           nodeIntegration: true,
         },
         autoHideMenuBar: true,
+        icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
       });
     }
 
-    // Carrega o HTML local e passa o ID do vídeo como parâmetro
-    const videoId = extractVideoId(url);  // Extrai o ID do vídeo
-    if (videoId) {
-      videoWindow.loadURL(`file://${__dirname}/video.html?video=${videoId}`);
-    } else {
-      console.log("URL inválida");
-    }
+    videoWindow.loadURL(`file://${__dirname}/video.html?video=${videoId}`);
+
+    // Fechar o vídeo ao pressionar "Esc"
+    ipcMain.on('close-video', () => {
+      if (videoWindow) {
+        videoWindow.close();
+      }
+    });
   });
 }
 

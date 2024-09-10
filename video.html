@@ -19,10 +19,23 @@
       width: 100%;
       height: 100%;
     }
+    /* Estilizando o iframe do loading */
+    #loadingFrame {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      border: none;
+    }
   </style>
 </head>
 <body>
   <div id="player"></div>
+    <!-- Loading iframe -->
+    <iframe id="loadingFrame" src="loading.html"></iframe>
+
 
   <script>
     function onYouTubeIframeAPIReady() {
@@ -51,11 +64,28 @@
       return url; // Já estamos passando o ID do vídeo diretamente, sem precisar de regex.
     }
 
+    window.onload = function() {
+      // Simulando o tempo de carregamento
+      setTimeout(() => {
+        // Remove o iframe de loading
+        document.getElementById('loadingFrame').remove();
+        // Exibe o conteúdo principal
+        document.getElementById('content').style.display = 'block';
+      }, 2000);  // Simula um tempo de carregamento de 2 segundos
+    };
+
     // Carrega a API do YouTube
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+     // Fechar o vídeo ao pressionar "Esc"
+     window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        ipcRenderer.send('close-video');  // Envia mensagem para o processo principal fechar a janela
+      }
+    });
   </script>
 </body>
 </html>
