@@ -18,6 +18,9 @@
       left: 0;
       width: 100%;
       height: 100%;
+      display: none; /* O vídeo começa invisível até o fade-in */
+      opacity: 0;
+      transition: opacity 1s ease-in; /* Adiciona o efeito de fade-in */
     }
     /* Estilizando o iframe do loading */
     #loadingFrame {
@@ -52,12 +55,27 @@
             'autoplay': 1,
             'controls': 1,
             'fullscreen': 1
+          },
+          events: {
+            'onReady': (event) => {
+              document.getElementById('loadingFrame').style.display = 'none'; // Remove o preloader
+              const playerElement = document.getElementById('player');
+              playerElement.style.display = 'block'; // Exibe o player
+              playerElement.style.opacity = 1; // Aplica o fade-in
+              event.target.playVideo(); // Reproduz o vídeo
+            },
+            'onError': () => {
+              alert('Erro ao carregar o vídeo.');
+            }
           }
+          
         });
+        
       } else {
         alert('URL inválida');
       }
     }
+    
 
     // Função para extrair o ID do vídeo (não é mais necessária aqui, pois já estamos passando o ID)
     function extractVideoId(url) {
@@ -71,7 +89,7 @@
         document.getElementById('loadingFrame').remove();
         // Exibe o conteúdo principal
         document.getElementById('content').style.display = 'block';
-      }, 2000);  // Simula um tempo de carregamento de 2 segundos
+      }, 1000);  // Simula um tempo de carregamento de 2 segundos
     };
 
     // Carrega a API do YouTube
