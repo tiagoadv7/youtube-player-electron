@@ -18,11 +18,27 @@
       left: 0;
       width: 100%;
       height: 100%;
+      display: none; /* O vídeo começa invisível até o fade-in */
+      opacity: 0;
+      transition: opacity 1s ease-in; /* Adiciona o efeito de fade-in */
+    }
+    /* Estilizando o iframe do loading */
+    #loadingFrame {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      border: none;
     }
   </style>
 </head>
 <body>
   <div id="player"></div>
+    <!-- Loading iframe -->
+    <iframe id="loadingFrame" src="loading.html"></iframe>
+
 
   <script>
     function onYouTubeIframeAPIReady() {
@@ -39,23 +55,61 @@
             'autoplay': 1,
             'controls': 1,
             'fullscreen': 1
+          },
+          events: {
+            'onReady': (event) => {
+              document.getElementById('loadingFrame').style.display = 'none'; // Remove o preloader
+              const playerElement = document.getElementById('player');
+              playerElement.style.display = 'block'; // Exibe o player
+              playerElement.style.opacity = 1; // Aplica o fade-in
+              event.target.playVideo(); // Reproduz o vídeo
+            },
+            'onError': () => {
+              alert('Erro ao carregar o vídeo.');
+            }
           }
+          
         });
+        
       } else {
         alert('URL inválida');
       }
     }
+    
 
     // Função para extrair o ID do vídeo (não é mais necessária aqui, pois já estamos passando o ID)
     function extractVideoId(url) {
       return url; // Já estamos passando o ID do vídeo diretamente, sem precisar de regex.
     }
 
+    window.onload = function() {
+      // Simulando o tempo de carregamento
+      setTimeout(() => {
+        // Remove o iframe de loading
+        document.getElementById('loadingFrame').remove();
+        // Exibe o conteúdo principal
+        document.getElementById('content').style.display = 'block';
+      }, 3000);  // Simula um tempo de carregamento de 2 segundos
+    };
+
     // Carrega a API do YouTube
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+// // Fechar o vídeo ao pressionar "Esc"
+// window.addEventListener('keydown', (e) => {
+//   if (e.key === 'Escape', e.keyCode === 27 || e.which === 27) {
+//     ipcRenderer.send('close-video');  // Envia mensagem para o processo principal fechar a janela
+//   }
+
+  // Fechar o vídeo ao pressionar "Esc" usando o ipcRenderer exposto pelo preload
+  window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape',e.keyCode === 27 || e.which === 27){
+        window.electron.send('close-video');  // Usa a função exposta pelo preload
+      }
+});
   </script>
 </body>
 </html>
