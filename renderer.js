@@ -48,9 +48,9 @@ document.getElementById('urlInput').addEventListener('keydown', (e) => {
   }
 });
 
-// Detecta quando a tecla "Esc" é pressionada
+// Detecta quando a tecla "Esc" é pressionada e envia a mensagem para fechar a segunda janela
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    ipcRenderer.send('close-video'); // Envia uma mensagem para o processo principal fechar a janela
+    ipcRenderer.send('close-video'); // Envia uma mensagem para o processo principal fechar a janela de vídeo
   }
 });
