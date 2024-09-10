@@ -41,12 +41,12 @@ function createWindow() {
     } else {
       // Caso contrário, exibe na tela primária em tela cheia
       videoWindow = new BrowserWindow({
+        icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
         fullscreen: true,
         webPreferences: {
           nodeIntegration: true,
         },
         autoHideMenuBar: true,
-        icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
       });
     }
 
