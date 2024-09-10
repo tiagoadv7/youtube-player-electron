@@ -20,14 +20,6 @@ function createWindow() {
 
   mainWindow.loadFile('index.html');
 
-  
-// Detecta quando a tecla "Esc" é pressionada e envia a mensagem para fechar a segunda janela
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    ipcRenderer.send('close-video'); // Envia uma mensagem para o processo principal fechar a janela de vídeo
-  }
-});
-
   mainWindow.on('closed', function() {
     mainWindow = null;
   });
@@ -51,7 +43,9 @@ ipcMain.on('play-video', (event, url) => {
       y: externalDisplay.bounds.y,
       fullscreen: true,
       webPreferences: {
-        nodeIntegration: true,
+        preload: path.join(__dirname, 'preload-video.js'),  // Carrega o script preload para expor o ipcRenderer
+        nodeIntegration: false,  // Mantém a integração Node.js desativada
+        contextIsolation: true,  // Mantém o isolamento de contexto para segurança
       },
       autoHideMenuBar: true,
       icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
@@ -60,7 +54,9 @@ ipcMain.on('play-video', (event, url) => {
     videoWindow = new BrowserWindow({
       fullscreen: true,
       webPreferences: {
-        nodeIntegration: true,
+        preload: path.join(__dirname, 'preload-video.js'),  // Carrega o script preload para expor o ipcRenderer
+        nodeIntegration: false,  // Mantém a integração Node.js desativada
+        contextIsolation: true,  // Mantém o isolamento de contexto para segurança
       },
       autoHideMenuBar: true,
       icon: path.join(__dirname, 'assets/icons/video-icon.png'),  // Ícone personalizado
@@ -102,4 +98,3 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
-

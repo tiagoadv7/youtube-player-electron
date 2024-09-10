@@ -20,7 +20,7 @@
       height: 100%;
       display: none; /* O vídeo começa invisível até o fade-in */
       opacity: 0;
-      transition: opacity 0.4s ease-in; /* Adiciona o efeito de fade-in */
+      transition: opacity 1s ease-in; /* Adiciona o efeito de fade-in */
     }
     /* Estilizando o iframe do loading */
     #loadingFrame {
@@ -98,11 +98,17 @@
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// Fechar o vídeo ao pressionar "Esc"
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape', e.keyCode === 27 || e.which === 27) {
-    ipcRenderer.send('close-video');  // Envia mensagem para o processo principal fechar a janela
-  }
+// // Fechar o vídeo ao pressionar "Esc"
+// window.addEventListener('keydown', (e) => {
+//   if (e.key === 'Escape', e.keyCode === 27 || e.which === 27) {
+//     ipcRenderer.send('close-video');  // Envia mensagem para o processo principal fechar a janela
+//   }
+
+  // Fechar o vídeo ao pressionar "Esc" usando o ipcRenderer exposto pelo preload
+  window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape',e.keyCode === 27 || e.which === 27){
+        window.electron.send('close-video');  // Usa a função exposta pelo preload
+      }
 });
   </script>
 </body>
