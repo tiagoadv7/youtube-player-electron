@@ -2,3 +2,5 @@
 <br>
 Tela inicial do app <br>
 uma interface simples e de facil usabilidade
+<h1>Instala as dependências</h1>
+<p>npm install</p>
