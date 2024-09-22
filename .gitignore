@@ -2,6 +2,7 @@
 node_modules
 /dist
 /dist_electron
+-dist/win-unpacked/Youtube Player.exe filter=lfs
 
 # local env files
 .env.local

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,25 @@
     /* Ocultar o conteúdo principal até o carregamento completo */
     #content {
       display: none;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
     }
+
+    /* Estilizando o logotipo, input e botões */
+    #content .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      /* Desliza para cima */
+      transition: opacity 1.5s ease, transform 1.5s ease;
+    }
+
+    /* Classe que será adicionada para ativar o fade-in */
+    #content.show .fade-in {
+      opacity: 1;
+      transform: translateY(0);
+      /* Retorna à posição original */
+    }
+
     /* Estilizando o iframe do loading */
     #loadingFrame {
       position: fixed;
@@ -21,37 +40,123 @@
       height: 100%;
       z-index: 9999;
       border: none;
+      opacity: 1;
+      transition: opacity 1s ease-in-out;
     }
+
     /* Estilizando o alerta de erro */
     #error-alert {
       display: none;
     }
+
+    /* Modal para o botão Sobre */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .modal.show {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal.hide {
+      opacity: 0;
+      pointer-events: none;
+      /* Evitar cliques durante a animação */
+      transform: translate(-50%, -55%);
+    }
+
+    /* Posiciona os botões fixos no topo */
+    #top-buttons {
+      position: fixed;
+      top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      opacity: 1;
+      transition: opacity 2s ease-in-out;
+    }
+
+    #aboutBtn {
+      opacity: 0;
+      transition: opacity 1.5s ease, transform 1.5s ease;
+    }
+
+    #aboutBtn.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Estilizando o alerta de atualização */
+    #update-alert {
+      display: none;
+    }
   </style>
 </head>
+
 <body class="bg-gray-400 flex items-center justify-center min-h-screen">
   <!-- Loading iframe -->
   <iframe id="loadingFrame" src="loading.html"></iframe>
 
+  <!-- Botões adicionais fixados no topo -->
+  <div id="top-buttons">
+    <button id="aboutBtn" class="bg-blue-500 hover:bg-blue-700 rounded-full px-4 py-2 text-white fade-in">
+      <i class="fas fa-info-circle"></i>
+    </button>
+  </div>
+
   <!-- Conteúdo do aplicativo -->
-  <div class="container text-center" id="content">
-    <h1 class="text-4xl text-white mb-4">YouTube Player</h1>
+  <div class="container text-center flex flex-col items-center justify-center" id="content">
+    <h1 class="text-4xl text-white mb-4 fade-in"></h1>
+
+    <!-- Centraliza a imagem -->
+    <img class="inline align-middle w-56 mb-4 fade-in" src="./assets/icons/logo.svg" alt="YouTube Player Icon">
 
     <!-- Alerta de erro -->
-    <div id="error-alert" class="bg-red-500 text-white p-3 rounded-md mb-4">
+    <div id="error-alert" class="bg-red-500 text-white p-3 rounded-md mb-4 fade-in">
       <i class="fas fa-exclamation-circle"></i> <span>Insira uma URL do YouTube!</span>
     </div>
 
     <!-- Input e botão -->
-    <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center fade-in">
       <label class="relative block text-slate-500">
-        <span class="sr-only "></span>
+        <span class="sr-only"></span>
         <span class="absolute inset-y-0 left-0 flex items-center pl-2">
-            <i class="fas fa-paste"></i>
+          <i class="fas fa-paste"></i>
         </span>
-        <input id="urlInput" type="text" class="placeholder:italic placeholder:text-slate-500 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm w-96" placeholder="Cole uma URL do YouTube" />
+        <input id="urlInput" type="text"
+          class="placeholder:italic placeholder:text-slate-500 block bg-white border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm w-96"
+          placeholder="Cole uma URL do YouTube" />
       </label>
-      <button id="playBtn" class="bg-sky-500 hover:bg-sky-700 rounded-full mt-1 ml-2 px-3 py-2 text-white items-center justify-center">
-        <i class="fas fa-play"></i>
+      <button id="playBtn" class="bg-sky-700 hover:bg-sky-500 rounded-full mt-1 ml-2 px-3 py-2 text-white fade-in">
+        <i class="fas fa-play "></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Sobre o Aplicativo -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold mb-4">Sobre o Aplicativo</h2>
+      <p><strong>Nome:</strong> YouTube Player</p>
+      <p><strong>Versão:</strong> 1.0.24</p>
+      <p><strong>Autor:</strong> Tiago Lima</p>
+      <p><strong>Email:</strong> tiagolimadbvs7@gmail.com</p>
+      <button id="closeModal" class="mt-4 bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">
+        <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
   </div>
@@ -60,15 +165,51 @@
 
   <!-- Script para remover o preload após carregar -->
   <script>
-    window.onload = function() {
+    window.onload = function () {
       // Simulando o tempo de carregamento
       setTimeout(() => {
-        // Remove o iframe de loading
-        document.getElementById('loadingFrame').remove();
-        // Exibe o conteúdo principal
-        document.getElementById('content').style.display = 'block';
+        // Adiciona a transição de opacidade para o efeito de fade-out do iframe
+        document.getElementById('loadingFrame').style.opacity = '0';
+
+        // Após a transição de fade-out, remove o iframe de loading
+        setTimeout(() => {
+          document.getElementById('loadingFrame').remove();
+
+          // Exibe o conteúdo principal com efeito de fade-in
+          const content = document.getElementById('content');
+          const aboutBtn = document.getElementById('aboutBtn'); // Botão "Sobre"
+
+          content.style.display = 'block';
+          content.style.opacity = '1';
+
+          // Adiciona a classe 'show' para disparar o efeito de fade-in nos elementos
+          setTimeout(() => {
+            content.classList.add('show');
+            aboutBtn.classList.add('show'); // Faz o botão "Sobre" aparecer com fade-in
+          }, 200);  // Atraso para garantir que o conteúdo já está visível
+        }, 1000);  // O tempo da transição do fade-out é de 1 segundo
       }, 2000);  // Simula um tempo de carregamento de 2 segundos
     };
+
+    // Modal de Sobre com efeito fade
+    const aboutBtn = document.getElementById('aboutBtn');
+    const aboutModal = document.getElementById('aboutModal');
+    const closeModal = document.getElementById('closeModal');
+
+    aboutBtn.addEventListener('click', () => {
+      aboutModal.classList.add('show');
+      aboutModal.classList.remove('hide');
+      aboutModal.style.display = 'flex'; // Certifica-se de que o modal apareça corretamente
+    });
+
+    closeModal.addEventListener('click', () => {
+      aboutModal.classList.add('hide');
+      setTimeout(() => {
+        aboutModal.classList.remove('show');
+        aboutModal.style.display = 'none';  // Ocultar completamente após o fade-out
+      }, 300); // tempo de transição do fade-out
+    });
   </script>
 </body>
+
 </html>

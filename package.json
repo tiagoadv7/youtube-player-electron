@@ -3,14 +3,16 @@
   "version": "1.0.24",
   "main": "main.js",
   "scripts": {
-     "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "keywords": [],
   "author": "Tiago Lima",
+  "homepage": "https://github.com/tiagoadv7/youtube-player-electron",
+  "author-email": "tiagolimadbvs7@gmail.com",
   "license": "ISC",
   "description": "Sonoplastia IASD",
   "dependencies": {
-    "electron": "^32.0.2",
     "font-awesome": "^4.7.0",
     "tailwindcss": "^3.4.10"
   }
